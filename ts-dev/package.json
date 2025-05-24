@@ -1,0 +1,17 @@
+{
+  "name": "max-m4l-project",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "node scripts/build.js && node scripts/copy-to-max.js",
+    "dev": "tsc --watch"
+  },
+  "author": "your name goes here",
+  "license": "license",
+  "devDependencies": {
+    "esbuild": "^0.25.4",
+    "fast-glob": "^3.3.3",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,66 @@
+# ----------------------
+# IDEs: VS Code & WebStorm
+# ----------------------
+.vscode/
+.idea/
+*.iml
+
+# ----------------------
+# OS Files
+# ----------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ----------------------
+# Node.js & TypeScript
+# ----------------------
+node_modules/
+dist/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# ----------------------
+# Max/MSP & Max for Live
+# ----------------------
+# Max generates these files automatically and they don't need to be versioned
+*.maxproj
+*.maxpat~*
+*.maxhelp~*
+*.mxf
+*.mxo
+*.mxv
+*.mxj
+*.maxbak
+
+# Optional: if you compile externals or use audio/video processing
+*.wav
+*.aif
+*.aiff
+*.mov
+*.mp4
+*.m4v
+
+# Project build artifacts
+# max-project/code/*.js
+# max-project/code/*.map
+
+# ----------------------
+# Misc
+# ----------------------
+.env
+.env.*
+*.bak
+*.tmp
+*.swp
+*.swo
+
+
+/ts-dev/dist/
+/ts-dev/node_modules/
