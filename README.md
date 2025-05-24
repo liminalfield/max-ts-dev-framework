@@ -8,7 +8,7 @@ This README provides an overview of the project structure, setup instructions, b
 The repository is organized into two primary folders, separating the Max project from the TypeScript development environment:
 
 ```
-max-m4l-ts-project/
+max-ts-dev-framework/
 ├── max-project/ 
 │ ├── code/ 
 │ └── patchers/ 
