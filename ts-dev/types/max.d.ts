@@ -43,5 +43,6 @@ declare global {
         set(path: string, value: any): void;
         observe(path: string): void;
         unobserve(path: string): void;
+        getcount(property: string): number;
     }
 }
