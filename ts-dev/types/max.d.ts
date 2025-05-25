@@ -31,6 +31,7 @@ declare global {
         get(key: string): any;
         set(key: string, value: any): void;
         replace(key: string, value: any): void;
+        getkeys(): string[];
     }
 
     class LiveAPI {
