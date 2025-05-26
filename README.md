@@ -70,7 +70,7 @@ By structuring the project this way, you keep the Max-facing files (max-project)
 ## Getting Started
 Follow these steps to set up and use the framework for your own project:
 1. Clone or Use as Template: Download this repository or click "Use this template" on GitHub to create a new project repository based on it. This will give you the entire structured framework.
-2. Install Dependencies: Open a terminal in the `ts-dev` directory and `run npm install`. This will install the TypeScript compiler and any other npm packages required (if any). The `node_modules/` folder will be created in `ts-dev` (it is excluded from git).
+2. Install Dependencies: Open a terminal in the `ts-dev` directory and run `npm install`. This will install the TypeScript compiler and any other npm packages required (if any). The `node_modules/` folder will be created in `ts-dev` (it is excluded from git).
 3. Open the Max Project: In Max (or Ableton Live’s Max for Live), open the `max-project` folder as a project, or open the provided `hello.maxpat` patcher inside `max-project/patchers/`. This patch is an example that uses the built JavaScript file via a v8 object. The v8 object is already pointing to `code/helloWorld.js` and has autowatch enabled for live reloading
 4. Build the TypeScript Code: During development, write your code in TypeScript files under `ts-dev/src/` (you can use your preferred editor or IDE; the project is editor-agnostic). When ready to test in Max, run the build script `npm run build`. This command (defined in `package.json`) will:
     - Compile TypeScript to JavaScript – using `ts-dev/scripts/build.js`, which invokes the TypeScript compiler according to `tsconfig.json`, outputting .js files to `ts-dev/dist/`.
