@@ -1,4 +1,4 @@
-# Max/MSP & Max for Live TypeScript Dev Framework
+# Max & Max for Live TypeScript Dev Framework
 
 This repository provides a dev framework for developing projects with Cycling 74's Max and Ableton's Max for Live tools using TypeScript. It enables developers to write modern TypeScript code for Max’s JavaScript runtime (the v8 object), and streamline the build and deployment process.
 
