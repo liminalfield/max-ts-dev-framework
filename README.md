@@ -84,6 +84,8 @@ Tip: You may integrate this build command into your IDE or editor. For instance,
 ## Planned Improvements
 This framework is in its early stages, and there are several known limitations and potential improvements on the roadmap:
 
+- The repo does not currently include a .maxproj file. You'll need to copy over a new/empty .maxproj file into `max-project\` if you want to set this as an actual max project. I will be updating this at some point to include a mostly empty .maxproj that can be used as a starting point.
+
 - Streamlining file deployment: Currently, the `copy-to-max.js` script requires manual listing of each file to copy. This is error-prone if you forget to add a new file. A future update may include a more dynamic solution – for example, maintaining a YAML/JSON configuration file that lists the output files to deploy, or simply copying all .js files from `dist/` by default. This would make the build process more scalable and convenient.
 
 - Expanded Max API Type Definitions: The included TypeScript definitions for Max are very minimal. We plan to expand these as the framework matures, or incorporate existing type definitions from the community. Integrating a complete definition (such as those available in the DefinitelyTyped project) would provide comprehensive IntelliSense and compile-time checking for the Max API
