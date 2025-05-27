@@ -79,8 +79,10 @@ We now support **3 + 1 build directives** that control how each `.ts` file is ha
 - **Rationale**: Most Max scripts are simple and don’t require bundling
 - **Recommendation**: For clarity, explicitly include `// @build simple` even if it’s the default
 
+---
 
 
+# And now, back to our regularly scheduled programming
 
 
 
