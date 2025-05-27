@@ -4,14 +4,20 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "node scripts/build.js && node scripts/copy-to-max.js",
-    "dev": "tsc --watch"
+    "build": "node scripts/esbuild-all.js && node scripts/copy-to-max.js",
+    "build:tsc": "tsc -p tsconfig.json && node scripts/copy-to-max.js",
+    "clean:dist": "rimraf dist",
+    "clean:max": "node scripts/clean-max-code.js",
+    "clean:all": "npm run clean:dist && npm run clean:max"
   },
   "author": "your name goes here",
   "license": "license",
   "devDependencies": {
-    "esbuild": "^0.25.4",
+    "esbuild": "^0.25.5",
     "fast-glob": "^3.3.3",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "rimraf": "^6.0.1"
   }
 }

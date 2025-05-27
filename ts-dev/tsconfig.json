@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "lib": ["es2016", "dom"],
     "module": "none",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -8,7 +9,11 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "baseUrl": ".",
+    "paths": {
+      "types": ["types"]
+    }
   },
   "include": ["src/**/*", "types/max.d.ts"]
 }

@@ -2,10 +2,10 @@
 export {}; // Makes this a module so "declare global" works
 
 declare global {
-    var autowatch: number;
-    var inlets: number;
-    var inlet: number;
-    var outlets: number;
+    let autowatch: number;
+    let inlets: number;
+    let inlet: number;
+    let outlets: number;
 
     const jsarguments: string[];
     const messagename: string;

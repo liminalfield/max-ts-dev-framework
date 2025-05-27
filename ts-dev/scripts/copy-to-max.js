@@ -12,7 +12,7 @@ const srcBase = resolve(__dirname, '../dist');
 const destBase = resolve(__dirname, '../../max-project/code');
 
 // Explicitly named top-level files
-const manualFiles = ['helloWorld.js'];
+const manualFiles = ['helloWorld.js', 'helloBundle.js'];
 
 // Globbed files from commands/
 const globbedFiles = fg.sync('commands/*.js', { cwd: srcBase });
