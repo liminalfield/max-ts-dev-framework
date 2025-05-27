@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 112.0, 115.0, 1000.0, 780.0 ],
+		"rect" : [ 880.0, 117.0, 352.0, 780.0 ],
 		"gridsize" : [ 15.0, 15.0 ],
 		"boxes" : [ 			{
 				"box" : 				{
@@ -20,7 +20,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 36.0, 26.0, 24.0, 24.0 ]
+					"patching_rect" : [ 17.0, 14.0, 24.0, 24.0 ]
 				}
 
 			}
@@ -31,7 +31,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 36.0, 75.0, 34.0, 22.0 ],
+					"patching_rect" : [ 17.0, 53.0, 34.0, 22.0 ],
 					"text" : "hello"
 				}
 
@@ -44,7 +44,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 36.0, 131.0, 93.0, 22.0 ],
+					"patching_rect" : [ 93.0, 34.0, 93.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
@@ -76,10 +76,10 @@
 
 			}
  ],
-		"originid" : "pat-27",
+		"originid" : "pat-20",
 		"dependency_cache" : [ 			{
 				"name" : "helloWorld.js",
-				"bootpath" : "D:/Projects/max-m4l-ts-project/max-project/code",
+				"bootpath" : "D:/Projects/max-ts-dev-framework/max-project/code",
 				"patcherrelativepath" : "../code",
 				"type" : "TEXT",
 				"implicit" : 1
