@@ -1,8 +1,88 @@
-# Max & Max for Live TypeScript Dev Framework
+# Max/MSP & Max for Live TypeScript Dev Framework
 
 This repository provides a dev framework for developing projects with Cycling 74's Max and Ableton's Max for Live tools using TypeScript. It enables developers to write modern TypeScript code for Max’s JavaScript runtime (the v8 object), and streamline the build and deployment process.
 
 This README provides an overview of the project structure, setup instructions, build workflow, and guidance for using the framework.
+
+
+## What’s New (Dev Branch Only)
+
+The following features and improvements are currently available **only on the `dev` branch**. They are not yet part of the main release.
+
+---
+
+### esbuild is now the default build system
+
+- The project now uses [`esbuild`](https://esbuild.github.io/) as the default TypeScript bundler for all scripts.
+- This provides faster builds and support for modular, import-based Max scripting.
+- The legacy TypeScript compiler option (`tsc`) is still available as:
+  ```bash
+  npm run build:tsc
+  ```
+
+---
+
+### New clean commands
+
+We’ve added three granular clean options:
+
+| Command           | Description                                               |
+|-------------------|-----------------------------------------------------------|
+| `npm run clean:dist` | Deletes the entire `dist/` directory                        |
+| `npm run clean:max`  | Deletes all contents of `code/`, but keeps the folder itself |
+| `npm run clean:all`  | Runs both `clean:dist` and `clean:max`                      |
+
+> Note: `npm run build` now automatically runs `clean:dist` before building.
+
+---
+
+### Build Directive Support
+
+We now support **3 + 1 build directives** that control how each `.ts` file is handled during the build process. These should be added as comments at the top of the file:
+
+```ts
+// @build simple
+```
+
+#### `// @build simple`
+
+- **Purpose**: For classic Max-style scripts with no imports or bundling
+- **Behavior**:
+   - `bundle: false`
+   - `format: "cjs"` — allows top-level functions like `anything()` to be picked up by Max
+- **Use this when**: Writing simple Max entry scripts loaded directly by a `v8` object.
+
+---
+
+#### `// @build bundle`
+
+- **Purpose**: For modular scripts using `import`, shared utilities, or requiring bundling
+- **Behavior**:
+   - `bundle: true`
+   - `format: "iife"` — output is wrapped and functions must be exposed using `globalThis`
+- **Use this when**: Writing command handlers or shared modules that rely on imports.
+
+---
+
+#### `// @build ignore`
+
+- **Purpose**: Exclude the file entirely from the build
+- **Behavior**:
+   - The file is skipped during compilation and not copied to Max
+- **Use this when**: A file is incomplete, experimental, or intentionally not included in the patch.
+
+---
+
+#### No Directive Present
+
+- **Behavior**: Treated as `// @build simple`
+- **Rationale**: Most Max scripts are simple and don’t require bundling
+- **Recommendation**: For clarity, explicitly include `// @build simple` even if it’s the default
+
+
+
+
+
 
 ## Project Structure
 The repository is organized into two primary folders, separating the Max project from the TypeScript development environment:
@@ -32,7 +112,7 @@ By structuring the project this way, you keep the Max-facing files (max-project)
 ### max-project
 `max-project/`
 - A standard Max project folder, containing everything needed to load and run the project in Max.
-- This is just a regular project folder, so other standard Max project files can be placed here as needed, e.g., media/, externals/ if required.)
+- This is just a regular project folder, so other standard Max project files can be placed here as needed, e.g., media/, externals/ if required.
 
 `max-project/code/`
 - JavaScript code for Max, copied from the TypeScript build output. This will include files like `helloWorld.js` (generated from TypeScript) that the Max patcher uses.
@@ -70,7 +150,7 @@ By structuring the project this way, you keep the Max-facing files (max-project)
 ## Getting Started
 Follow these steps to set up and use the framework for your own project:
 1. Clone or Use as Template: Download this repository or click "Use this template" on GitHub to create a new project repository based on it. This will give you the entire structured framework.
-2. Install Dependencies: Open a terminal in the `ts-dev` directory and run `npm install`. This will install the TypeScript compiler and any other npm packages required (if any). The `node_modules/` folder will be created in `ts-dev` (it is excluded from git).
+2. Install Dependencies: Open a terminal in the `ts-dev` directory and `run npm install`. This will install the TypeScript compiler and any other npm packages required (if any). The `node_modules/` folder will be created in `ts-dev` (it is excluded from git).
 3. Open the Max Project: In Max (or Ableton Live’s Max for Live), open the `max-project` folder as a project, or open the provided `hello.maxpat` patcher inside `max-project/patchers/`. This patch is an example that uses the built JavaScript file via a v8 object. The v8 object is already pointing to `code/helloWorld.js` and has autowatch enabled for live reloading
 4. Build the TypeScript Code: During development, write your code in TypeScript files under `ts-dev/src/` (you can use your preferred editor or IDE; the project is editor-agnostic). When ready to test in Max, run the build script `npm run build`. This command (defined in `package.json`) will:
     - Compile TypeScript to JavaScript – using `ts-dev/scripts/build.js`, which invokes the TypeScript compiler according to `tsconfig.json`, outputting .js files to `ts-dev/dist/`.
@@ -84,8 +164,6 @@ Tip: You may integrate this build command into your IDE or editor. For instance,
 ## Planned Improvements
 This framework is in its early stages, and there are several known limitations and potential improvements on the roadmap:
 
-- The repo does not currently include a .maxproj file. You'll need to copy over a new/empty .maxproj file into `max-project\` if you want to set this as an actual max project. I will be updating this at some point to include a mostly empty .maxproj that can be used as a starting point.
-
 - Streamlining file deployment: Currently, the `copy-to-max.js` script requires manual listing of each file to copy. This is error-prone if you forget to add a new file. A future update may include a more dynamic solution – for example, maintaining a YAML/JSON configuration file that lists the output files to deploy, or simply copying all .js files from `dist/` by default. This would make the build process more scalable and convenient.
 
 - Expanded Max API Type Definitions: The included TypeScript definitions for Max are very minimal. We plan to expand these as the framework matures, or incorporate existing type definitions from the community. Integrating a complete definition (such as those available in the DefinitelyTyped project) would provide comprehensive IntelliSense and compile-time checking for the Max API
@@ -94,7 +172,7 @@ This framework is in its early stages, and there are several known limitations a
 
 - Documentation and Examples: While this README serves as an initial guide, more examples and perhaps a wiki or tutorial videos could be added to help new users. Future documentation might include recipes for common patterns (e.g., handling Max timing, using the Live API with TypeScript, etc.).
 
-Feedback and contributions on these improvements are welcome. If you have ideas or find issues, feel free to open an issue or pull request on the repository. Since there is no strict contributing guide, you can also reach out to the maintainer directly for significant suggestions or questions.
+Feedback and contributions to these improvements are welcome. If you have ideas or find issues, feel free to open an issue or pull request on the repository. Since there is no strict contributing guide, you can also reach out to the maintainer directly for significant suggestions or questions.
 
 
 ## License
