@@ -1,17 +1,17 @@
 import esbuild from "esbuild";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 
 const sourceDir = path.resolve("src");
 const outDir = path.resolve("dist");
+const HASH_FILE = '.build-hashes.json';
 
-function cleanDist() {
-    if (fs.existsSync(outDir)) {
-        fs.rmSync(outDir, { recursive: true, force: true });
-        console.log("Cleaned dist/ directory.");
+function ensureDistExists() {
+    if (!fs.existsSync(outDir)) {
+        fs.mkdirSync(outDir, { recursive: true });
+        console.log("Created dist/ directory.");
     }
-    fs.mkdirSync(outDir);
-    console.log("Created dist/ directory.");
 }
 
 function getAllTsFiles(dir) {
@@ -42,6 +42,102 @@ function getBuildMode(filePath) {
     return "simple"; // default if no directive found
 }
 
+function getFileHash(filePath) {
+    const content = fs.readFileSync(filePath, 'utf8');
+    return crypto.createHash('md5').update(content).digest('hex');
+}
+
+function loadStoredHashes() {
+    if (!fs.existsSync(HASH_FILE)) return {};
+    return JSON.parse(fs.readFileSync(HASH_FILE, 'utf8'));
+}
+
+function saveStoredHashes(hashes) {
+    fs.writeFileSync(HASH_FILE, JSON.stringify(hashes, null, 2));
+}
+
+function getDependencies(filePath) {
+    const content = fs.readFileSync(filePath, 'utf8');
+    const dependencies = [];
+    const dir = path.dirname(filePath);
+    
+    // Simple regex to find import statements
+    const importRegex = /import.*?from\s+['"](.+?)['"];?/g;
+    let match;
+    
+    while ((match = importRegex.exec(content)) !== null) {
+        const importPath = match[1];
+        
+        // Resolve relative imports
+        if (importPath.startsWith('./') || importPath.startsWith('../')) {
+            let resolvedPath = path.resolve(dir, importPath);
+            
+            // Try adding .ts extension if file doesn't exist
+            if (!fs.existsSync(resolvedPath) && !resolvedPath.endsWith('.ts')) {
+                resolvedPath = resolvedPath + '.ts';
+            }
+            
+            if (fs.existsSync(resolvedPath)) {
+                dependencies.push(resolvedPath);
+                // Recursively get dependencies of dependencies
+                dependencies.push(...getDependencies(resolvedPath));
+            }
+        }
+    }
+    
+    return [...new Set(dependencies)]; // Remove duplicates
+}
+
+function shouldRebuild(sourceFile, buildMode) {
+    const storedHashes = loadStoredHashes();
+    const currentHash = getFileHash(sourceFile);
+    const storedHash = storedHashes[sourceFile];
+    
+    let hasChanged = false;
+    
+    // Check if the source file itself has changed
+    if (currentHash !== storedHash) {
+        hasChanged = true;
+    }
+    
+    // For bundled files, also check dependencies
+    if (buildMode === "bundle") {
+        const dependencies = getDependencies(sourceFile);
+        
+        for (const depPath of dependencies) {
+            const depCurrentHash = getFileHash(depPath);
+            const depStoredHash = storedHashes[depPath];
+            
+            if (depCurrentHash !== depStoredHash) {
+                hasChanged = true;
+                break; // No need to check further
+            }
+        }
+    }
+    
+    return hasChanged;
+}
+
+function updateHashes(sourceFile, buildMode) {
+    const storedHashes = loadStoredHashes();
+    const currentHash = getFileHash(sourceFile);
+    
+    // Update source file hash
+    storedHashes[sourceFile] = currentHash;
+    
+    // For bundled files, also update dependency hashes
+    if (buildMode === "bundle") {
+        const dependencies = getDependencies(sourceFile);
+        
+        for (const depPath of dependencies) {
+            const depCurrentHash = getFileHash(depPath);
+            storedHashes[depPath] = depCurrentHash;
+        }
+    }
+    
+    saveStoredHashes(storedHashes);
+}
+
 async function buildAll() {
     const files = getAllTsFiles(sourceDir);
 
@@ -55,11 +151,16 @@ async function buildAll() {
             continue;
         }
 
+        // Check if file needs rebuilding
+        if (!shouldRebuild(entry, buildMode)) {
+            console.log(`${relativePath} unchanged - skipping build`);
+            continue;
+        }
+
+        console.log(`${relativePath} changed - rebuilding`);
+
         const shouldBundle = buildMode === "bundle";
-
         fs.mkdirSync(path.dirname(outFile), { recursive: true });
-
-        console.log(`Building ${relativePath} → ${outFile} [mode: ${buildMode}]`);
 
         const format = shouldBundle ? "iife" : "cjs";
 
@@ -74,12 +175,24 @@ async function buildAll() {
             logLevel: "error"
         });
 
+        // Add timestamp to rebuilt file
+        prependBuildTimestamp(outFile);
+        
+        // Update hashes after successful build
+        updateHashes(entry, buildMode);
     }
 
-    console.log("All source files bundled successfully.");
+    console.log("Build completed.");
 }
 
-cleanDist();
+function prependBuildTimestamp(filePath) {
+    const now = new Date();
+    const timestamp = `// Built: ${now.toLocaleString()}\n`;
+    const content = fs.readFileSync(filePath, 'utf8');
+    fs.writeFileSync(filePath, timestamp + content, 'utf8');
+}
+
+ensureDistExists();
 buildAll().catch(err => {
     console.error("Bundling failed:", err);
     process.exit(1);
