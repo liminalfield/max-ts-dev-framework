@@ -64,3 +64,5 @@ pnpm-debug.log*
 
 /ts-dev/dist/
 /ts-dev/node_modules/
+
+.build-hashes.json
