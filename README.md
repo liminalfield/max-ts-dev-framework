@@ -11,8 +11,12 @@ The following features and improvements are currently available **only on the `d
 
 ---
 
-### esbuild is now the default build system
+### Updated the esbuild build system (June 7, 2025)
+- Succesfully building a file adds it to .build-hashes.json; subsequent builds checks the hash to determine if it needs to be rebuilt. Only changed files will be rebuilt.
+- Rebuilding / building a file now adds a timestamp at the top of the file
 
+
+### esbuild is now the default build system
 - The project now uses [`esbuild`](https://esbuild.github.io/) as the default TypeScript bundler for all scripts.
 - This provides faster builds and support for modular, import-based Max scripting.
 - The legacy TypeScript compiler option (`tsc`) is still available as:
