@@ -46,4 +46,18 @@ declare global {
         unobserve(path: string): void;
         getcount(property: string): number;
     }
+
+    class Task {
+        constructor(callback: () => void, ...args: any[]);
+        interval: number;
+        repeat: number;
+        cancel(): void;
+        schedule(delay?: number): void;
+    }
+
+    class Global {
+        constructor(name: string);
+        name: string;
+        sendnamed(messageName: string, ...args: any[]): void;
+    }
 }
